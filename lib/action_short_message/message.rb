@@ -3,7 +3,7 @@ module ActionShortMessage
     attr_accessor :content, :to, :send_at, :delivery_options, :delivery_handler,
                   :raise_delivery_errors
 
-    attr_setter :delivery_method
+    attr_writer :delivery_method
 
     # TODO: create registred interceptor and observer
 

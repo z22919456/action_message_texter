@@ -2,7 +2,7 @@ module ActionShortMessage
   class ShortMessage
     attr_accessor :action, :message, :to, :debug, :options
 
-    attr_setter :sms_provider
+    attr_writer :sms_provider
 
     # 建立 provider 實體
     def sms_provider(method = nil, settings = {})
