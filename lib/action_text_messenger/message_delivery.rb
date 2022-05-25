@@ -1,4 +1,4 @@
-module ActionShortMessage
+module ActionTextMessenger
   # 分派工作
   class MessageDelivery < Delegator
     def initialize(messenger_class, action, *args)

@@ -1,4 +1,4 @@
-module ActionShortMessage
+module ActionTextMessenger
   module DeliveryMethods
     extend ActiveSupport::Concern
 

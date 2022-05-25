@@ -1,4 +1,4 @@
-module ActionShortMessage
+module ActionTextMessenger
   class Message
     attr_accessor :content, :to, :send_at, :delivery_options, :delivery_handler,
                   :raise_delivery_errors

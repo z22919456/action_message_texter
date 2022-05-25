@@ -1,15 +1,15 @@
 $:.push File.expand_path('lib', __dir__)
 
 # Maintain your gem's version:
-require 'action_short_message/version'
+require 'action_text_messenger/version'
 
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |spec|
-  spec.name        = 'action_short_message'
-  spec.version     = ActionShortMessage::VERSION
+  spec.name        = 'action_text_messenger'
+  spec.version     = ActionTextMessenger::VERSION
   spec.authors     = ['Arthur Li']
   spec.email       = ['z22919456@gmail.com']
-  spec.homepage    = 'http://github.com/z22919456/action_short_message'
+  spec.homepage    = 'http://github.com/z22919456/action_text_messenger'
   spec.summary     = 'SMS/Text Message gem, allow your Rails send short message to phone'
   spec.description = 'SMS/Text Message gem, allow your Rails send short message to phone'
   spec.license     = 'MIT'

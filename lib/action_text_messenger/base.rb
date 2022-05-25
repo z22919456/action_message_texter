@@ -1,4 +1,4 @@
-module ActionShortMessage
+module ActionTextMessenger
   class Base < AbstractController::Base
     include Rescuable
     include DeliveryMethods
@@ -26,7 +26,7 @@ module ActionShortMessage
 
       def deliver_message(message)
         # Notification
-        ActiveSupport::Notifications.instrument('deliver.action_short_message') do |payload|
+        ActiveSupport::Notifications.instrument('deliver.action_text_messenger') do |payload|
           set_payload_for_message(payload, message)
           yield # Let Message do the delivery actions
         end
@@ -43,7 +43,7 @@ module ActionShortMessage
       # connect to MessageDelivery through method_missing
       def method_missing(method_name, *args)
         if action_methods.include?(method_name.to_s)
-          ActionShortMessage::MessageDelivery.new(self, method_name, *args)
+          ActionTextMessenger::MessageDelivery.new(self, method_name, *args)
         else
           super
         end
@@ -66,7 +66,7 @@ module ActionShortMessage
       }
 
       # Notification
-      ActiveSupport::Notifications.instrument('process.action_short_message', payload) do
+      ActiveSupport::Notifications.instrument('process.action_text_messenger', payload) do
         super
         @_message = NullMessage.new unless @_message_was_called
       end
@@ -86,6 +86,6 @@ module ActionShortMessage
 
     def default_i18n_subject(interpolations = {}); end
 
-    ActiveSupport.run_load_hooks(:action_short_message, self)
+    ActiveSupport.run_load_hooks(:action_text_messenger, self)
   end
 end

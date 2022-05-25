@@ -1,3 +1,3 @@
 Rails.application.routes.draw do
-  mount ActionShortMessage::Engine => "/action_short_message"
+  mount ActionTextMessenger::Engine => '/action_text_messenger'
 end
