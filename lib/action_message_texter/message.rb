@@ -1,6 +1,6 @@
 module ActionMessageTexter
   class Message
-    attr_accessor :content, :to, :send_at, :delivery_options, :delivery_handler,
+    attr_accessor :content, :to, :deliver_at, :delivery_options, :delivery_handler, :other_options,
                   :raise_delivery_errors
 
     attr_writer :delivery_method

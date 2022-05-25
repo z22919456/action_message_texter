@@ -1,9 +1,13 @@
 module ActionMessageTexter
   class LogSubscriber < ActiveSupport::LogSubscriber
     # delivery log
-    def deliver(_event)
+    def deliver(event)
       info do
-        # TODO: Add Log
+        message = event.payload[:content]
+        to = event.payload[:to]
+        deliver_at = event.payload[:deliver_at]
+        texter = event.payload[:texter]
+        "#{texter}: Delivered message [#{message}] to #{to} at #{deliver_at}"
       end
     end
 
