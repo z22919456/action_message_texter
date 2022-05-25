@@ -1,4 +1,4 @@
-module ActionTextMessenger
+module ActionMessageTexter
   class Base < AbstractController::Base
     include Rescuable
     include DeliveryMethods
@@ -26,7 +26,7 @@ module ActionTextMessenger
 
       def deliver_message(message)
         # Notification
-        ActiveSupport::Notifications.instrument('deliver.action_text_messenger') do |payload|
+        ActiveSupport::Notifications.instrument('deliver.action_message_texter') do |payload|
           set_payload_for_message(payload, message)
           yield # Let Message do the delivery actions
         end
@@ -43,7 +43,7 @@ module ActionTextMessenger
       # connect to MessageDelivery through method_missing
       def method_missing(method_name, *args)
         if action_methods.include?(method_name.to_s)
-          ActionTextMessenger::MessageDelivery.new(self, method_name, *args)
+          ActionMessageTexter::MessageDelivery.new(self, method_name, *args)
         else
           super
         end
@@ -66,7 +66,7 @@ module ActionTextMessenger
       }
 
       # Notification
-      ActiveSupport::Notifications.instrument('process.action_text_messenger', payload) do
+      ActiveSupport::Notifications.instrument('process.action_message_texter', payload) do
         super
         @_message = NullMessage.new unless @_message_was_called
       end
@@ -76,16 +76,21 @@ module ActionTextMessenger
     end
 
     # return Message instance
-    def sms(_headers = {}, _message)
+    def sms(_content = nil, headers = {})
       # TODO: prepare message and return
       @_message_was_called = true
+
+      headers = self.class.default.merge(headers)
+
       wrap_delivery_behavior!(:base)
+
+      message.content = content
     end
 
     private
 
     def default_i18n_subject(interpolations = {}); end
 
-    ActiveSupport.run_load_hooks(:action_text_messenger, self)
+    ActiveSupport.run_load_hooks(:action_message_texter, self)
   end
 end

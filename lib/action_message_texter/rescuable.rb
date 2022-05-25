@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ActionTextMessenger
+module ActionMessageTexter
   module Rescuable
     extend ActiveSupport::Concern
     include ActiveSupport::Rescuable

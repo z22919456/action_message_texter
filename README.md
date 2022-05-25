@@ -1,4 +1,4 @@
-# ActionTextMessenger
+# ActionMessageTexter
 Short description and motivation.
 
 ## Usage
@@ -8,7 +8,7 @@ How to use my plugin.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'action_text_messenger'
+gem 'action_message_texter'
 ```
 
 And then execute:
@@ -18,7 +18,7 @@ $ bundle
 
 Or install it yourself as:
 ```bash
-$ gem install action_text_messenger
+$ gem install action_message_texter
 ```
 
 ## Contributing

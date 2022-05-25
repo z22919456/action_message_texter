@@ -1,4 +1,4 @@
-module ActionTextMessenger
+module ActionMessageTexter
   class LogSubscriber < ActiveSupport::LogSubscriber
     # delivery log
     def deliver(_event)
@@ -17,9 +17,9 @@ module ActionTextMessenger
     end
 
     def logger
-      ActionTextMessenger::Base.logger || Rails.logger
+      ActionMessageTexter::Base.logger || Rails.logger
     end
   end
 end
 
-ActionTextMessenger::LogSubscriber.attach_to :action_text_messenger
+ActionMessageTexter::LogSubscriber.attach_to :action_message_texter
