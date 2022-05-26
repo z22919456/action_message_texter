@@ -78,7 +78,6 @@ module ActionMessageTexter
 
     # return Message instance
     def sms(headers = {})
-      puts headers
       @_message_was_called = true
 
       headers = self.class.default_params.merge(headers)

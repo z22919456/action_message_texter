@@ -21,7 +21,7 @@ module ActionMessageTexter
     end
 
     def logger
-      ActionMessageTexter::Base.logger || Rails.logger
+      ActionMessageTexter::Base.logger
     end
   end
 end
