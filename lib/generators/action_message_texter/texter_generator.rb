@@ -1,6 +1,6 @@
-module Rails
+module ActionMessageTexter
   module Generators
-    class ActionMessageTexter < NamedBase
+    class TexterGenerator < Rails::Generators::NamedBase
       source_root File.expand_path(__dir__)
 
       argument :actions, type: :array, default: [], banner: 'method method'
@@ -8,7 +8,7 @@ module Rails
       check_class_collision suffix: 'Texter'
 
       def create_message_file
-        template './templates/texter.rb', File.join('app/texter', "#{file_name}_texter.rb")
+        template '../templates/texter.rb', File.join('app/texter', "#{file_name}_texter.rb")
       end
 
       protected
