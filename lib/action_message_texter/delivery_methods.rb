@@ -7,7 +7,9 @@ module ActionMessageTexter
       cattr_accessor :deliver_later_queue_name, default: :texters
 
       class_attribute :delivery_methods, default: {}.freeze
-      class_attribute :delivery_method, default: :console
+      class_attribute :delivery_method, default: :base
+
+      add_delivery_method(:base, SMSProvider::Base)
     end
 
     module ClassMethods
