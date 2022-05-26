@@ -1,6 +1,7 @@
 module ActionMessageTexter
   module Generators
     class TexterGenerator < Rails::Generators::NamedBase
+      require 'yaml'
       source_root File.expand_path(__dir__)
 
       argument :actions, type: :array, default: [], banner: 'method method'
@@ -9,6 +10,18 @@ module ActionMessageTexter
 
       def create_message_file
         template '../templates/texter.rb', File.join('app/texter', "#{file_name}_texter.rb")
+      end
+
+      def create_locale_yml
+        @yaml = {}
+        default_locale = I18n.default_locale.to_s
+        scope_name = "#{file_name}_texter"
+        @yaml[default_locale] = {}
+        @yaml[default_locale][scope_name] = {}
+        actions.each do |action|
+          @yaml[default_locale][scope_name][action] = "#{action} message"
+        end
+        template '../templates/I18n.yml.rb', File.join('config/locales/texter', "#{file_name}_texter.yml")
       end
 
       protected

@@ -78,6 +78,7 @@ module ActionMessageTexter
 
     # return Message instance
     def sms(headers = {})
+      puts headers
       @_message_was_called = true
 
       headers = self.class.default_params.merge(headers)
@@ -90,17 +91,21 @@ module ActionMessageTexter
 
       message.other_options = headers
 
-      # # TODO: set provider dynamic
+      # TODO: set provider dynamic
       wrap_delivery_behavior!(:base)
 
-      # message
+      message
     end
 
     private
 
     def render_content(headers)
-      content = headers.delete(:content) || default_i18n_context
-      raise 'Message content cannot be nil' unless content.present?
+      content = headers.delete(:content) || default_i18n_context(instance_values.reject do |key, _value|
+                                                                   key.start_with?('_')
+                                                                 end)
+      unless content.present?
+        raise 'Message content cannot be nil, add content to sms method, or add I18n to generated message content'
+      end
 
       content
     end
@@ -112,9 +117,9 @@ module ActionMessageTexter
       recipient
     end
 
-    def default_i18n_context(interpolations = {}) # :doc:
+    def default_i18n_context(interpolations = {})
       texter_scope = self.class.texter_name.tr('/', '.')
-      I18n.t(:subject, **interpolations.merge(scope: [texter_scope, action_name], default: action_name.humanize))
+      I18n.t(action_name, **interpolations.symbolize_keys.merge(scope: [texter_scope]), default: nil)
     end
 
     ActiveSupport.run_load_hooks(:action_message_texter, self)
