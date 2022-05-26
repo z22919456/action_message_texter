@@ -1,8 +1,8 @@
 # ActionMessageTexter
-Short description and motivation.
 
-## Usage
-How to use my plugin.
+仿造Rails ActionMailer 打造的簡訊寄送模組，提供與Mailer一致的開發體驗
+
+
 
 ## Installation
 Add this line to your application's Gemfile:
@@ -20,6 +20,17 @@ Or install it yourself as:
 ```bash
 $ gem install action_message_texter
 ```
+
+## Usage
+
+### Texter Generator 
+This generator will generate Texter at `app/texter`
+```bash
+rails g action_message_texter:texter Devise sign_up_succeed
+```
+
+### Texter
+
 
 ## Contributing
 Contribution directions go here.
