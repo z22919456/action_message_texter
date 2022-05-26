@@ -1,8 +1,8 @@
 module ActionMessageTexter
   # 分派工作
   class MessageDelivery < Delegator
-    def initialize(messenger_class, action, *args)
-      @messenger_class = messenger_class
+    def initialize(texter_class, action, *args)
+      @texter_class = texter_class
       @action = action
       @args = args
     end
@@ -11,6 +11,10 @@ module ActionMessageTexter
       processed_messenger.handle_exceptions do
         message.deliver
       end
+    end
+
+    def deliver_later(options = {})
+      enqueue_delivery :deliver_now, options
     end
 
     def __getobj__
@@ -33,9 +37,14 @@ module ActionMessageTexter
     private
 
     def processed_messenger
-      @processed_messenger ||= @messenger_class.new.tap do |messenger|
+      @processed_messenger ||= @texter_class.new.tap do |messenger|
         messenger.process @action, *@args
       end
+    end
+
+    def enqueue_delivery(delivery_method, options = {})
+      args = @texter_class.name, @action.to_s, delivery_method.to_s, *@args
+      ::ActionMessageTexter::DeliveryJob.set(options).perform_later(*args)
     end
   end
 end

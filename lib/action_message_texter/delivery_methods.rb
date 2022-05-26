@@ -4,6 +4,7 @@ module ActionMessageTexter
 
     included do
       cattr_accessor :raise_delivery_errors, default: true
+      cattr_accessor :deliver_later_queue_name, default: :texters
 
       class_attribute :delivery_methods, default: {}.freeze
       class_attribute :delivery_method, default: :console
