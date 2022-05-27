@@ -107,6 +107,7 @@ GEM
     nio4r (2.5.8)
     nokogiri (1.13.6-arm64-darwin)
       racc (~> 1.4)
+    pg (1.3.5)
     racc (1.6.0)
     rack (2.2.3)
     rack-test (1.1.0)
@@ -153,6 +154,7 @@ PLATFORMS
 
 DEPENDENCIES
   action_message_texter!
+  pg
 
 BUNDLED WITH
    2.3.13

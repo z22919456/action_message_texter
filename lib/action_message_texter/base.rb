@@ -15,6 +15,10 @@ module ActionMessageTexter
     }
 
     class << self
+      def register_observer(observer)
+        Message.register_observer(observer_class_for(observer))
+      end
+
       def default(value)
         self.default_params = default_params.merge(value).freeze if value
         default_params
@@ -47,6 +51,15 @@ module ActionMessageTexter
           ActionMessageTexter::MessageDelivery.new(self, method_name, *args)
         else
           super
+        end
+      end
+
+      def observer_class_for(value)
+        case value
+        when String, Symbol
+          value.to_s.camelize.constantize
+        else
+          value
         end
       end
     end

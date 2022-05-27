@@ -1,5 +1,16 @@
 module ActionMessageTexter
   class Message
+    class << self
+      @@delivery_notification_observers = []
+      @@delivery_interceptors = []
+      def register_observer(observer)
+        @@delivery_notification_observers << observer unless @@delivery_notification_observers.include?(observer)
+      end
+
+      def unregister_observer(observer)
+        @@delivery_notification_observers.delete(observer)
+      end
+    end
     attr_accessor :content, :to, :deliver_at, :delivery_options, :delivery_handler, :other_options,
                   :raise_delivery_errors, :response
 
@@ -21,21 +32,27 @@ module ActionMessageTexter
       else
         do_delivery
       end
-      # inform_observers
-      self
+      inform_observers
+      response
     end
 
     def delivery_method(method_klass = nil, settings = {})
       puts method_klass
       if method_klass
         # TODO: get provider from configuration
-        @delivery_method = method_klass.new(settings)
+        @@delivery_method = method_klass.new(settings)
       else
-        @delivery_method
+        @@delivery_method
       end
     end
 
     private
+
+    def inform_observers
+      @@delivery_notification_observers.each do |observer|
+        observer.delivered_message(self)
+      end
+    end
 
     def do_delivery
       delivery_method.deliver!(self)
