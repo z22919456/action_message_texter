@@ -19,9 +19,7 @@ Or install it yourself as:
 $ gem install action_message_texter
 ```
 
-## 使用方式
-
-### Configuration
+## Configuration
 
 1. 載入設定  
    先到`config/application.rb` 新增 `require action_message_texter/engine`
@@ -54,7 +52,7 @@ $ gem install action_message_texter
    ```
    若要依照不同環境使用不同的簡訊寄送方式 請在不同環境的設定檔(如`config/environments/development.rb`)內覆蓋這個設定，也可以在Texter中使用`delivery_method = :method`直接指定
 
-#### 完整設定如下
+### 完整設定如下
 ```ruby
 # config/applications.rb
 
@@ -73,7 +71,7 @@ class Application < Rails::Application
 end
 ```
 
-### Generator 
+## Generator 
 
 ```bash
 rails g action_message_texter:texter ModuleName action_name action_name ....
@@ -99,7 +97,7 @@ zh-TW:
 ```
 
 
-### Texter
+## Texter
 
 與Mailer雷同，但因為簡訊是比較單純的文字，因此render view了，簡訊生成的部分將使用`I18n`，同時會自動帶入參數
 
@@ -130,7 +128,7 @@ class MyTexter
   ....
 ```
 
-### Send Message
+## Send Message
 
 跟 Mailer 一樣，提供 `deliver_now` 跟 `deliver_later` 兩種寄送方式，`deliver_now` 會直接寄出，`deliver_later`會調用Job做寄出。
 
