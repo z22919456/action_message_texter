@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    action_message_texter (0.0.1)
+    action_message_texter (0.0.2)
       rails (>= 5.0.0)
 
 GEM

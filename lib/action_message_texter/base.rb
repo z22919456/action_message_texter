@@ -90,8 +90,7 @@ module ActionMessageTexter
 
       message.other_options = headers
 
-      # TODO: set provider dynamic
-      wrap_delivery_behavior!(:base)
+      wrap_delivery_behavior!(self.class.delivery_method)
 
       message
     end
