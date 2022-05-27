@@ -8,7 +8,13 @@ module ActionMessageTexter
 
       check_class_collision suffix: 'Texter'
 
-      def create_message_file
+      def create_application_texter
+        unless File.exist?('app/texter/application_texter.rb')
+          template '../templetes/application_texter.rb', File.join('app/texter', 'application_texter.rb')
+        end
+      end
+
+      def create_texter
         template '../templates/texter.rb', File.join('app/texter', "#{file_name}_texter.rb")
       end
 
