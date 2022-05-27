@@ -10,6 +10,16 @@ module ActionMessageTexter
       def unregister_observer(observer)
         @@delivery_notification_observers.delete(observer)
       end
+
+      def register_interceptor(interceptor)
+        unless @@delivery_notification_interceptors.include?(interceptor)
+          @@delivery_notification_interceptors << interceptor
+        end
+      end
+
+      def unregister_interceptor(interceptor)
+        @@delivery_notification_interceptors.delete(interceptor)
+      end
     end
     attr_accessor :content, :to, :deliver_at, :delivery_options, :delivery_handler, :other_options,
                   :raise_delivery_errors, :response
@@ -26,7 +36,7 @@ module ActionMessageTexter
     end
 
     def deliver
-      # inform_interceptors
+      inform_interceptors
       if delivery_handler
         delivery_handler.deliver_message(self) { do_delivery }
       else
@@ -51,6 +61,12 @@ module ActionMessageTexter
     def inform_observers
       @@delivery_notification_observers.each do |observer|
         observer.delivered_message(self)
+      end
+    end
+
+    def inform_interceptors
+      @@delivery_notification_observers.each do |observer|
+        observer.delivering_message(self)
       end
     end
 

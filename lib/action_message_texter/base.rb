@@ -19,6 +19,18 @@ module ActionMessageTexter
         Message.register_observer(observer_class_for(observer))
       end
 
+      def unregister_observer(observer)
+        Message.unregister_observer(observer_class_for(observer))
+      end
+
+      def register_interceptor(interceptor)
+        Message.register_interceptor(observer_class_for(interceptor))
+      end
+
+      def unregister_interceptor(interceptor)
+        Message.unregister_observer(observer_class_for(interceptor))
+      end
+
       def default(value)
         self.default_params = default_params.merge(value).freeze if value
         default_params
