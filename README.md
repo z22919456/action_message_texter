@@ -26,21 +26,21 @@ $ gem install action_message_texter
 
 2. 簡訊寄送方式設定  
 
-    由於簡訊沒有類似SMTP的標準寄送方式，全依照簡訊提供商的API，目前我有包一個基於**山竹簡訊**的API，未來有計畫開放大家自行建立自己的寄送方式
+    由於簡訊沒有類似SMTP的標準寄送方式，全依照簡訊提供商的API，目前我有包一個基於**三竹簡訊**的API，未來有計畫開放大家自行建立自己的寄送方式
 
     > 我有另外包一個簡訊API Gem，直接支援ActionMessageTexter(廢話)，若有需要請至[Mitake Api](https://github.com/z22919456/mitake_api)，目前功能正常但...我還沒寫ReadMe（別揍我），之後再慢慢修，屆時再拜託各路大神發ＰＲ指教了，感恩的心。
 
-    跟Mailer的設定方是差部多，使用`ActionMessageTexter::Base.add_delivery_method`新增簡訊寄送方式，需要提供的參數有 (`name: Symbol`, `ApiClass: Class`, `ApiSetting: Hash`)
+    跟Mailer的設定方是差不多，使用`ActionMessageTexter::Base.add_delivery_method`新增簡訊寄送方式，需要提供的參數有 (`name: Symbol`, `ApiClass: Class`, `ApiSetting: Hash`)
 
     ```ruby
     # config/application.rb
     ActionMessageTexter::Base.add_delivery_method(:provider, SMSProvider, key: ENV['SMS_KEY'])
     ```
     
-    若是使用山竹科技簡訊的朋友們，安裝好mitake_api後，請這樣做
+    若是使用三逐科技簡訊的朋友們，安裝好mitake_api後，請這樣做
     ```ruby
     # config/application.rb
-    ActionMessageTexter::Base.add_delivery_method(:mitake, MitakeApi::SMSProvider, url: "山竹發給你的網域名稱", username: "山竹的使用者名稱", password: "山竹的密碼")
+    ActionMessageTexter::Base.add_delivery_method(:mitake, MitakeApi::SMSProvider, url: "三竹發給你的網域名稱", username: "三竹的使用者名稱", password: "三竹的密碼")
     ```
     可以加入多個簡訊寄送方式，可以依照不同的情況使用不同的寄送方式
 
