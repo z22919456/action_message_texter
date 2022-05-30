@@ -19,21 +19,102 @@ Or install it yourself as:
 $ gem install action_message_texter
 ```
 
+## Usage
+
+
+請先執行`generator`
+
+```bash
+rails g action_message_texter:texter ModuleName action_name action_name ....
+```
+這將會產生以下文件
+
+```
+root
+├─ app
+│  └─ texters
+│     ├─ application_texter.rb
+│     └─ module_name_texter.rb
+│
+└─ config
+   └─ locales
+      └─ module_name.yml
+```    
+
+其他大致上跟Mailer差不多
+
+```ruby
+# app/texter/my_texter.rb
+class MyTexter
+  def my_ubereats(phone)
+    @order = "林東芳的半筋半肉牛肉麵"
+    @notes = "不要牛肉不要麵"
+    text(to: phone)
+  end
+end
+```
+與Mailer不同的是 簡訊內容不從View Render出來，請使用I18n，或是直接給 `content`
+
+```yaml
+# config/locales/texter/my_texter.yaml
+zh-TW:
+  my_texter:
+    my_action: 今晚我想來點%{order}，%{note}
+```
+直接給文字，不走I18n
+
+```ruby
+# app/texter/my_texter.rb
+def my_ubereats(phone)  
+  ...
+  text(to: phone, content: "今晚我想來點#{order}，#{note}")
+end
+```
+
+跟 Mailer 一樣，提供 `deliver_now` 跟 `deliver_later` 兩種寄送方式，`deliver_now` 會直接寄出，`deliver_later`會調用Job做寄出。
+
+```ruby
+# 直接寄出，後續的動作需等待這個動作完成
+MyTexter.my_ubereats("0987654321").deliver_now
+# 調用Job，後續的動作繼續執行
+MyTexter.my_ubereats("0987654321").deliver_latter
+
+```
+
+**於是 `0987654321` 就會收到這樣的簡訊**
+> 今晚我想來點林東芳的半筋半肉牛肉麵，不要牛肉不要麵
+
+
+
 ## Configuration
 
-1. 載入設定  
+### 設定簡訊傳送方式： 三竹簡訊 API
+
+設定方式基本跟 `Mailer` 一模一樣
+
+預設內建三竹簡訊，首先請設定`網域`，`帳號`，`密碼`，如果有需要`Callback`的話，且醒準備一下`Callback Url` 以上請參考三竹簡訊官網喔～
+
+> 有計劃提供一個介面讓大家可以自己包自己的 簡訊Api 模組
+> 到時候只需使用 `add_delivery_method`  就可以加入自己的 Api 模組
+
+*  載入設定  
    先到`config/application.rb` 新增 `require action_message_texter/engine`
 
-2. 簡訊寄送方式設定  
-
-    由於簡訊沒有類似SMTP的標準寄送方式，全依照簡訊提供商的API，目前我有包一個基於**三竹簡訊**的API，未來有計畫開放大家自行建立自己的寄送方式
+*  簡訊寄送方式設定  
     
     ```ruby
     # config/application.rb
-    config.action_message_texter.mitake_settings= :mitake, MitakeApi::SMSProvider, url: "三竹發給你的網域名稱", username: "三竹的使用者名稱", password: "三竹的密碼"
+    config.action_message_texter.mitake_settings= { 
+      url: "三竹發給你的網域名稱", 
+      username: "三竹的使用者名稱", 
+      password: "三竹的密碼", 
+      callback_url: "https://foo.bar.com/api/v1/callback" # 這行非必填
+    }  
     ```
 
-3. 設定預設寄送方式  
+*  設定預設寄送方式  
+   目前只有 `mitake` 一種寄送方式，因此預設就是這個，但若有需要的話
+   
    在`app/application.rb`裡，可以預設所有簡訊要使用哪一個寄送方式
    ``` ruby
     # app/application.rb
@@ -43,92 +124,15 @@ $ gem install action_message_texter
    ```
    若要依照不同環境使用不同的簡訊寄送方式 請在不同環境的設定檔(如`config/environments/development.rb`)內覆蓋這個設定，也可以在Texter中使用`delivery_method = :method`直接指定
 
-### 完整設定如下
-```ruby
-# config/applications.rb
 
-# 引用ActionMessageTexter
-require 'action_message_texter/engine'
-....
+## Message Object
 
-class Application < Rails::Application
-  ...
-  # 加入三竹科技登入方式
-  config.action_message_texter.mitake_settings(:url: ENV['URL'], username: ENV['USERNAME'], password: ENV['password'])
-  # 設定預設的寄送方式
-  config.action_message_texter.delivery_method = :mitake
-  ...
-end
-```
+相當於 `Mailer` 中的 `Message` 物件，是簡訊的本體，`Message` 物件包含了這些東西
+ - uuid: 簡訊的ID
+ - to: 收件者
+ - content: 簡訊內容
+ - response: 簡訊 Api 的回覆 (此部分可以參考[三竹簡訊API文件](https://sms.mitake.com.tw/common/header/download.jsp#))
 
-## Generator 
-
-```bash
-rails g action_message_texter:texter ModuleName action_name action_name ....
-```
-這會產生3個檔案，分別是 `app/texter/application_texter.rb` (若不存在)、`app/texter/{{name}}_texter.rb`、`config/locales/texter/{{name}}_texter.yaml`
-若有給定`function_name` 會自動生成對應的 function 以及字典檔
-
-
-```ruby
-# app/texter/my_texter.rb
-class MyTexter
-  def action_name
-    text(to: "+8860987654321")
-  end
-end
-```
-```yaml
-# config/locales/texter/my_texter.yaml
-zh-TW:
-  my_texter:
-    action_name: 
-    action_name2:
-```
-
-
-## Texter
-
-與Mailer雷同，但因為簡訊是比較單純的文字，因此render view了，簡訊生成的部分將使用`I18n`，同時會自動帶入參數
-
-#### Example
-假設要送出簡訊，並帶入訂單
-```ruby
-class MyTexter
-  def uber_eat_order(phone_number, order)
-    # 記得設成全域變數 我會幫你自動插到I18n內，就像平常使用view 時會插入 `<%=@order>` 一樣
-    @order = order
-    sms(to: phone_number)
-  end
-end
-```
-
-```yaml
-zh-TW:
-  my_texter: 
-    uber_eat_order: "今晚，我想來%{order}"
-# 記得插值不要加 `@` 喔
-```
-
-若不同的`Texter`想使用不同的method 可以直接加入 `delivery_method = :method`
-
-```ruby
-class MyTexter
-  delivery_method = :method
-  ....
-```
-
-## Send Message
-
-跟 Mailer 一樣，提供 `deliver_now` 跟 `deliver_later` 兩種寄送方式，`deliver_now` 會直接寄出，`deliver_later`會調用Job做寄出。
-
-```ruby
-# 直接寄出，後續的動作需等待這個動作完成
-MyTexter.uber_eat_order("0987654321", "林東芳牛肉麵").deliver_now
-# 調用Job，後續的動作繼續執行
-MyTexter.uber_eat_order("0987654321", "林東芳牛肉麵").deliver_latter
-
-```
 
 ## Callbacks
 
@@ -158,6 +162,10 @@ class MyTexter
 class TexterObserver
   def self.delivered_message(message)
     # 請實作此方法
+    
+    # 如傳送後儲存傳送結果
+    message_history = MessageHistory.find_by(uuid: message.uuid)
+    message_history.update(response_message: message.response.response_message)
   end
 end
 
@@ -178,6 +186,9 @@ end
 class TexterInspection
   def self.delivering_message(message)
     # 請實作此方法
+
+    # 如測試站時加入測試站專屬訊息
+    message.content = "[test]#{message.content}" unless Rails.env.production
   end
 end
 
@@ -185,17 +196,15 @@ end
 class MyTexter
   self.register_inspection(TexterObserver)
   
-  # 您也可以註冊多組Observer
+  # 您也可以註冊多組攔截器
   self.register_inspection(OtherObserver)
 end
 ```
+
 ## Test
 
-尚未規劃Test的部分
+小弟初次寫Gem 還不會寫測試 還請各位神人協助交流 感謝
 
-
-## Contributing
-Contribution directions go here.
 
 ## License
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
