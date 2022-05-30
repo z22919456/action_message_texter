@@ -1,7 +1,8 @@
 PATH
   remote: .
   specs:
-    action_message_texter (0.0.3)
+    action_message_texter (0.0.4)
+      mitake_api (= 0.0.4)
       rails (>= 5.0.0)
 
 GEM
@@ -77,6 +78,10 @@ GEM
     crass (1.0.6)
     digest (3.1.0)
     erubi (1.10.0)
+    faraday (2.3.0)
+      faraday-net_http (~> 2.0)
+      ruby2_keywords (>= 0.0.4)
+    faraday-net_http (2.0.3)
     globalid (1.0.0)
       activesupport (>= 5.0)
     i18n (1.10.0)
@@ -90,6 +95,9 @@ GEM
     method_source (1.0.0)
     mini_mime (1.1.2)
     minitest (5.15.0)
+    mitake_api (0.0.4)
+      faraday (~> 2.3.0)
+      rails (>= 5.0.0)
     net-imap (0.2.3)
       digest
       net-protocol
@@ -139,6 +147,7 @@ GEM
       thor (~> 1.0)
       zeitwerk (~> 2.5)
     rake (13.0.6)
+    ruby2_keywords (0.0.5)
     strscan (3.0.3)
     thor (1.2.1)
     timeout (0.3.0)

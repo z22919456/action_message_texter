@@ -65,7 +65,7 @@ module ActionMessageTexter
     end
 
     def inform_interceptors
-      @@delivery_notification_observers.each do |observer|
+      @@delivery_interceptors.each do |observer|
         observer.delivering_message(self)
       end
     end

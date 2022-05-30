@@ -6,6 +6,7 @@ require 'action_message_texter/message'
 require 'action_message_texter/rescuable'
 require 'action_message_texter/delivery_job'
 require 'sms_provider/base'
+require 'mitake_api'
 
 module ActionMessageTexter
   extend ::ActiveSupport::Autoload
