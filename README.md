@@ -92,15 +92,16 @@ MyTexter.my_ubereats("0987654321").deliver_latter
 
 設定方式基本跟 `Mailer` 一模一樣
 
-預設內建三竹簡訊，首先請設定`網域`，`帳號`，`密碼`，如果有需要`Callback`的話，且醒準備一下`Callback Url` 以上請參考三竹簡訊官網喔～
+預設內建三竹簡訊，首先請設定`網域`，`帳號`，`密碼`，如果有需要`Callback`的話，請準備一下`Callback Url`
 
-> 有計劃提供一個介面讓大家可以自己包自己的 簡訊Api 模組
+> 有計劃提供一個介面讓大家可以自己包自己的簡訊Api模組
 > 到時候只需使用 `add_delivery_method`  就可以加入自己的 Api 模組
 
-*  載入設定  
-   先到`config/application.rb` 新增 `require action_message_texter/engine`
 
-*  簡訊寄送方式設定  
+*  Require   
+   麻煩請先到`config/application.rb` 新增 `require action_message_texter/engine`
+
+*  設定三竹API
     
     ```ruby
     # config/application.rb
@@ -122,7 +123,7 @@ MyTexter.my_ubereats("0987654321").deliver_latter
     #預設值為 :mitake
     config.action_message_texter.delivery_method = :mitake
    ```
-   若要依照不同環境使用不同的簡訊寄送方式 請在不同環境的設定檔(如`config/environments/development.rb`)內覆蓋這個設定，也可以在Texter中使用`delivery_method = :method`直接指定
+   基本上的設定方式都與Mailer相同，如果有不知道如何設定的，可以使用Mailer的經驗試試看喔
 
 
 ## Message Object
