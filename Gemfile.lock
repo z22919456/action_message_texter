@@ -1,8 +1,8 @@
 PATH
   remote: .
   specs:
-    action_message_texter (0.0.4)
-      mitake_api (= 0.0.4)
+    action_message_texter (0.0.6)
+      mitake_api (~> 0.0.4)
       rails (>= 5.0.0)
 
 GEM
