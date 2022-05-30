@@ -74,7 +74,7 @@ rails g action_message_texter:texter ModuleName action_name action_name ....
 # app/texter/my_texter.rb
 class MyTexter
   def action_name
-    sms(to: "+8860987654321")
+    text(to: "+8860987654321")
   end
 end
 ```

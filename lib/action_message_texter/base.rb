@@ -102,7 +102,7 @@ module ActionMessageTexter
     end
 
     # return Message instance
-    def sms(headers = {})
+    def text(headers = {})
       @_message_was_called = true
 
       headers = self.class.default_params.merge(headers)
