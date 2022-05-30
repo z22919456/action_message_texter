@@ -27,27 +27,18 @@ $ gem install action_message_texter
 2. 簡訊寄送方式設定  
 
     由於簡訊沒有類似SMTP的標準寄送方式，全依照簡訊提供商的API，目前我有包一個基於**三竹簡訊**的API，未來有計畫開放大家自行建立自己的寄送方式
-
-    > 我有另外包一個簡訊API Gem，直接支援ActionMessageTexter(廢話)，若有需要請至[Mitake Api](https://github.com/z22919456/mitake_api)，目前功能正常但...我還沒寫ReadMe（別揍我），之後再慢慢修，屆時再拜託各路大神發ＰＲ指教了，感恩的心。
-
-    跟Mailer的設定方是差不多，使用`ActionMessageTexter::Base.add_delivery_method`新增簡訊寄送方式，需要提供的參數有 (`name: Symbol`, `ApiClass: Class`, `ApiSetting: Hash`)
-
-    ```ruby
-    # config/application.rb
-    ActionMessageTexter::Base.add_delivery_method(:provider, SMSProvider, key: ENV['SMS_KEY'])
-    ```
     
-    若是使用三逐科技簡訊的朋友們，安裝好mitake_api後，請這樣做
     ```ruby
     # config/application.rb
-    ActionMessageTexter::Base.add_delivery_method(:mitake, MitakeApi::SMSProvider, url: "三竹發給你的網域名稱", username: "三竹的使用者名稱", password: "三竹的密碼")
+    config.action_message_texter.mitake_settings= :mitake, MitakeApi::SMSProvider, url: "三竹發給你的網域名稱", username: "三竹的使用者名稱", password: "三竹的密碼"
     ```
-    可以加入多個簡訊寄送方式，可以依照不同的情況使用不同的寄送方式
 
 3. 設定預設寄送方式  
    在`app/application.rb`裡，可以預設所有簡訊要使用哪一個寄送方式
    ``` ruby
     # app/application.rb
+
+    #預設值為 :mitake
     config.action_message_texter.delivery_method = :mitake
    ```
    若要依照不同環境使用不同的簡訊寄送方式 請在不同環境的設定檔(如`config/environments/development.rb`)內覆蓋這個設定，也可以在Texter中使用`delivery_method = :method`直接指定
@@ -62,9 +53,8 @@ require 'action_message_texter/engine'
 
 class Application < Rails::Application
   ...
-  # 加入簡訊提供商
-  ActionMessageTexter::Base.add_delivery_method(:mitake, MitakeApi::SMSProvider,
-                                                url: ENV['URL'], username: ENV['USERNAME'], password: ENV['password'])
+  # 加入三竹科技登入方式
+  config.action_message_texter.mitake_settings(:url: ENV['URL'], username: ENV['USERNAME'], password: ENV['password'])
   # 設定預設的寄送方式
   config.action_message_texter.delivery_method = :mitake
   ...
@@ -140,31 +130,68 @@ MyTexter.uber_eat_order("0987654321", "林東芳牛肉麵").deliver_latter
 
 ```
 
+## Callbacks
+
+可以在Tester中加入 `before_action` 與 `after_action`，在這兩個funciton中可以取得`message`物件。
+```ruby
+class MyTexter
+  before_action :do_before
+  after_action :do_after
+
+  def do_before
+    ...do_something
+  end
+
+  def do_after
+    ...do_something
+  end
+  ....
+```
+
 
 ## Observer
 
+若需要再寄送後，查看寄送是否完成？儲存寄送方式結果...等
+可以註冊一個 `Observer` 或多個 `Observer`
+
+```ruby
+class TexterObserver
+  def self.delivered_message(message)
+    # 請實作此方法
+  end
+end
+
+
+class MyTexter
+  self.register_observer(TexterObserver)
+  
+  # 您也可以註冊多組Observer
+  self.register_observer(OtherObserver)
+end
+```
+
 ## Inspection
 
+如了`Observer` 您也可以註冊攔截器 `Inspection`
+
+```ruby
+class TexterInspection
+  def self.delivering_message(message)
+    # 請實作此方法
+  end
+end
 
 
+class MyTexter
+  self.register_inspection(TexterObserver)
+  
+  # 您也可以註冊多組Observer
+  self.register_inspection(OtherObserver)
+end
+```
+## Test
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+尚未規劃Test的部分
 
 
 ## Contributing

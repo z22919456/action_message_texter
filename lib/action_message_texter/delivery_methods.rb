@@ -10,6 +10,7 @@ module ActionMessageTexter
       class_attribute :delivery_method, default: :base
 
       add_delivery_method(:base, SMSProvider::Base)
+      add_delivery_method(:mitake, MitakeApi::SMSProvider, {})
     end
 
     module ClassMethods
