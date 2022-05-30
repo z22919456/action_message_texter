@@ -1,6 +1,6 @@
 # ActionMessageTexter
 
-仿造Rails ActionMailer 打造的簡訊寄送模組，提供與Mailer一致的開發體驗
+以 Rails ActionMailer 為參考打造的簡訊寄送模組，提供與 ActionMailer 一致的開發體驗
 
 ## Installation
 Add this line to your application's Gemfile:
@@ -41,7 +41,7 @@ root
       └─ module_name.yml
 ```    
 
-其他大致上跟Mailer差不多
+使用上大致上跟Mailer差不多
 
 ```ruby
 # app/texter/my_texter.rb
@@ -61,17 +61,18 @@ zh-TW:
   my_texter:
     my_action: 今晚我想來點%{order}，%{note}
 ```
-直接給文字，不走I18n
+
 
 ```ruby
 # app/texter/my_texter.rb
 def my_ubereats(phone)  
   ...
+  # 也可以直接給文字，不走I18n
   text(to: phone, content: "今晚我想來點#{order}，#{note}")
 end
 ```
 
-跟 Mailer 一樣，提供 `deliver_now` 跟 `deliver_later` 兩種寄送方式，`deliver_now` 會直接寄出，`deliver_later`會調用Job做寄出。
+跟 ActionMailer 一樣，提供 `deliver_now` 跟 `deliver_later` 兩種寄送方式，`deliver_now` 會直接寄出，`deliver_later`會調用Job做寄出。
 
 ```ruby
 # 直接寄出，後續的動作需等待這個動作完成
@@ -90,7 +91,7 @@ MyTexter.my_ubereats("0987654321").deliver_latter
 
 ### 設定簡訊傳送方式： 三竹簡訊 API
 
-設定方式基本跟 `Mailer` 一模一樣
+設定方式基本跟 `ActionMailer` 一模一樣
 
 預設內建三竹簡訊，首先請設定`網域`，`帳號`，`密碼`，如果有需要`Callback`的話，請準備一下`Callback Url`
 
@@ -123,12 +124,12 @@ MyTexter.my_ubereats("0987654321").deliver_latter
     #預設值為 :mitake
     config.action_message_texter.delivery_method = :mitake
    ```
-   基本上的設定方式都與Mailer相同，如果有不知道如何設定的，可以使用Mailer的經驗試試看喔
+   基本上的設定方式都與ActionMailer相同，如果有不知道如何設定的，可以依照設定Mailer的經驗試試看喔
 
 
 ## Message Object
 
-相當於 `Mailer` 中的 `Message` 物件，是簡訊的本體，`Message` 物件包含了這些東西
+`Message` 物件相當於 `ActionMailer` 中的 `Message` 物件，是簡訊的本體，`Message` 物件包含了這些東西
  - uuid: 簡訊的ID
  - to: 收件者
  - content: 簡訊內容
@@ -137,7 +138,7 @@ MyTexter.my_ubereats("0987654321").deliver_latter
 
 ## Callbacks
 
-可以在Tester中加入 `before_action` 與 `after_action`，在這兩個funciton中可以取得`message`物件。
+可以在Tester中加入 `before_action` 與 `after_action`，在這兩個方法中可以取得 `message` 物件。
 ```ruby
 class MyTexter
   before_action :do_before
