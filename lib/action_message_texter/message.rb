@@ -12,13 +12,11 @@ module ActionMessageTexter
       end
 
       def register_interceptor(interceptor)
-        unless @@delivery_notification_interceptors.include?(interceptor)
-          @@delivery_notification_interceptors << interceptor
-        end
+        @@delivery_interceptors << interceptor unless @@delivery_interceptors.include?(interceptor)
       end
 
       def unregister_interceptor(interceptor)
-        @@delivery_notification_interceptors.delete(interceptor)
+        @@delivery_interceptors.delete(interceptor)
       end
     end
     attr_accessor :content, :to, :deliver_at, :delivery_options, :delivery_handler, :other_options,
