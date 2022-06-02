@@ -107,7 +107,7 @@ MyTexter.my_ubereats("0987654321").deliver_latter
     ```ruby
     # config/application.rb
     config.action_message_texter.mitake_settings= { 
-      url: "三竹發給你的網域名稱", 
+      url: "三竹發給你的網域名稱 ex: https://smsapi.mitake.com.tw", 
       username: "三竹的使用者名稱", 
       password: "三竹的密碼", 
       callback_url: "https://foo.bar.com/api/v1/callback" # 這行非必填
