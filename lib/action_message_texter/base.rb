@@ -1,4 +1,9 @@
+# frozen_string_literal: true
+
 module ActionMessageTexter
+  #
+  # 所有Texter的父類別
+  #
   class Base < AbstractController::Base
     include Rescuable
     include DeliveryMethods
@@ -15,28 +20,51 @@ module ActionMessageTexter
     }
 
     class << self
+      ##
+      # 註冊觀察者Observer
+      #
+      # +Observer+ 需要包含一個Class Method +delivered_message(message)+
+      # 此方法會在訊息傳送後被呼叫 並取得 +message+ instance
+      # @params [Class|Symbel|String] observer
       def register_observer(observer)
         Message.register_observer(observer_class_for(observer))
       end
 
+      ##
+      # 移除已被註冊的 Observer
+      # @params [Class|Symbel|String] observer
       def unregister_observer(observer)
         Message.unregister_observer(observer_class_for(observer))
       end
 
+      ##
+      # 註冊攔截器Interceptor
+      #
+      # +Interceptor+ 需要包含一個Class Method +delivering_message(message)+
+      # 此Interceptor被註冊後 將於簡訊寄出前觸發delivering_message並取得 +message+ instance
+      #  @params [Class|Symbel|String] interceptor
       def register_interceptor(interceptor)
         Message.register_interceptor(observer_class_for(interceptor))
       end
 
+      ##
+      # 移除已被註冊的 Interceptor
+      # @params [Class|Symbel|String] observer
       def unregister_interceptor(interceptor)
         Message.unregister_observer(observer_class_for(interceptor))
       end
 
+      ##
+      # 可在 +Texter+ 中更改設定
+      #
+      # @param [Hash] value
       def default(value)
         self.default_params = default_params.merge(value).freeze if value
         default_params
       end
 
-      # set default params by configuration
+      ##
+      # 提供初始化時的 Configruation 使用
       alias default_options= default
 
       def texter_name
@@ -44,8 +72,9 @@ module ActionMessageTexter
       end
       attr_writer :texter_name
 
+      ##
+      # 寄送訊息 發出Log Notification
       def deliver_message(message)
-        # Notification
         ActiveSupport::Notifications.instrument('deliver.action_message_texter') do |payload|
           payload[:content] = message.content
           payload[:to] = message.to
@@ -57,7 +86,6 @@ module ActionMessageTexter
 
       private
 
-      # connect to MessageDelivery through method_missing
       def method_missing(method_name, *args)
         if action_methods.include?(method_name.to_s)
           ActionMessageTexter::MessageDelivery.new(self, method_name, *args)

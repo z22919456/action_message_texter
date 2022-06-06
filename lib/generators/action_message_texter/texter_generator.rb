@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ActionMessageTexter
   module Generators
     class TexterGenerator < Rails::Generators::NamedBase

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ActionMessageTexter
   # 分派工作
   class MessageDelivery < Delegator

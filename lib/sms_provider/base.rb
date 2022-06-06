@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SMSProvider
   class Base
     def initialize(*setting)

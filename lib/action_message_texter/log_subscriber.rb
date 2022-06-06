@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ActionMessageTexter
   class LogSubscriber < ActiveSupport::LogSubscriber
     # delivery log
