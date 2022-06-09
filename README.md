@@ -185,7 +185,7 @@ end
 如了`Observer` 您也可以註冊攔截器 `Inspection`
 
 ```ruby
-class TexterInspection
+class TexterInterceptor
   def self.delivering_message(message)
     # 請實作此方法
 
@@ -196,10 +196,10 @@ end
 
 
 class MyTexter
-  self.register_inspection(TexterObserver)
+  self.register_interceptor(TexterInterceptor)
   
   # 您也可以註冊多組攔截器
-  self.register_inspection(OtherObserver)
+  self.register_interceptor(OtherInterceptor)
 end
 ```
 
